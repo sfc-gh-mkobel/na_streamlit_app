@@ -12,6 +12,12 @@ create or replace view app_instance_schema.row_access_policy_test_vw as select *
 -- Create Streamlit app
 create or replace streamlit app_instance_schema.streamlit from '/' main_file='streamlit.py';
 
+CREATE OR REPLACE ROW ACCESS POLICY app_instance_schema.row_access_policy
+AS (the_owner VARCHAR) RETURNS BOOLEAN ->
+    the_owner = CURRENT_USER();
+
+
+ALTER VIEW app_instance_schema.row_access_policy_test_vw ADD ROW ACCESS POLICY app_instance_schema.row_access_policy ON (the_owner);
 
 create or replace procedure app_instance_schema.update_reference(ref_name string, operation string, ref_or_alias string)
 returns string
